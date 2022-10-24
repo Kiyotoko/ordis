@@ -1,58 +1,63 @@
 package net.jda.plugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
+import java.util.Set;
 
-import org.python.core.PyObject;
 import org.python.util.PythonInterpreter;
 
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.jda.Util;
 
 public class PlugIn {
-	public static final Logger logger = Logger.getLogger(PlugIn.class.getName());
-	public static final Map<String, User> users = new HashMap<>();
+    private PythonInterpreter interpreter = new PythonInterpreter();
+    private Set<CommandData> datas = new HashSet<>();
+    private ResourceBundle bundle;
+    private String name;
 
-	public void onPrivateMessage(String user, String response) {
-		users.get(user).openPrivateChannel().queue(c -> c.sendMessage(response).queue());
-	}
+    private final Util util = new Util();
 
-	public String getOfLang(String key) {
-		return bundle.getString(key);
-	}
+    public PlugIn(String name) {
+        this.name = name;
+        util.setPlugIn(this);
+    }
 
-	Collection<CommandData> datas = new ArrayList<>();
+    final void call(SlashCommandInteractionEvent event) {
+        User user = event.getUser();
+        util.setUser(user);
 
-	PythonInterpreter interpreter = new PythonInterpreter();
+        StringBuilder args = new StringBuilder();
+        for (OptionMapping option : event.getOptions()) {
+            args.append("(\"" + option.getName() + "\",\"" + option.getAsString() + "\"),");
+        }
+        if (!args.isEmpty())
+            args.deleteCharAt(args.length() - 1);
 
-	ResourceBundle bundle;
+        String key = event.getCommandPath().replace('/', '_');
+        String response = getInterpreter().eval(key + "(\"" + user.getAsTag() + "\",[" + args + "])").asString();
+        event.reply("" + response).queue();
+    }
 
-	final void call(SlashCommandInteractionEvent event) {
-		String tag = event.getUser().getAsTag();
-		User user = event.getUser();
-		if (!users.containsKey(tag)) {
-			users.put(tag, user);
-		}
+    public PythonInterpreter getInterpreter() {
+        return interpreter;
+    }
 
-		StringBuilder args = new StringBuilder();
-		for (OptionMapping option : event.getOptions()) {
-			args.append("(\"" + option.getName() + "\",\"" + option.getAsString() + "\"),");
-		}
-		if (!args.isEmpty())
-			args.deleteCharAt(args.length() - 1);
+    public Set<CommandData> getCommandData() {
+        return datas;
+    }
 
-		String key = event.getCommandPath().replace('/', '_');
-		PyObject response = interpreter.eval(key + "(\"" + event.getUser().getAsTag() + "\",[" + args + "])");
-		event.reply(response.asString()).queue();
-	}
+    public void setResourceBundle(ResourceBundle bundle) {
+        this.bundle = bundle;
+    }
 
-	public Collection<CommandData> getData() {
-		return datas;
-	}
+    public ResourceBundle getResourceBundle() {
+        return bundle;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

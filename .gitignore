@@ -1,0 +1,24 @@
+# bot token
+token.txt
+
+# properties
+*.properties
+
+# plugins
+plugins/*
+
+# test folder
+src/test
+
+# generated classes
+target
+*.class
+*.jar
+
+# Eclipse
+.settings/*
+*.classpath
+*.project
+
+# VS Code
+.vscode/*
