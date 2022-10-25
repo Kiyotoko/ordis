@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.python.util.PythonInterpreter;
 
+import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -29,6 +30,9 @@ public class PlugIn {
         User user = event.getUser();
         util.setUser(user);
 
+        Channel channel = event.getChannel();
+        util.setChannel(channel);
+
         StringBuilder args = new StringBuilder();
         for (OptionMapping option : event.getOptions()) {
             args.append("(\"" + option.getName() + "\",\"" + option.getAsString() + "\"),");
@@ -37,7 +41,9 @@ public class PlugIn {
             args.deleteCharAt(args.length() - 1);
 
         String key = event.getCommandPath().replace('/', '_');
-        String response = getInterpreter().eval(key + "(\"" + user.getAsTag() + "\",[" + args + "])").asString();
+        String response = getInterpreter()
+                .eval(key + "(\"" + channel.getId() + "\",\"" + user.getId() + "\",[" + args + "])")
+                .asString();
         event.reply("" + response).queue();
     }
 

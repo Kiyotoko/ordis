@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.User;
 import net.jda.plugin.PlugIn;
 
@@ -22,6 +23,20 @@ public final class Util {
         return PLUGINS.keySet();
     }
 
+    private static final Map<String, Channel> CHANNELS = new HashMap<>();
+
+    public static Channel getChannel(String key) {
+        return CHANNELS.get(key);
+    }
+
+    public String setChannel(Channel channel) {
+        String id = channel.getId();
+        if (!CHANNELS.containsKey(id)) {
+            CHANNELS.put(id, channel);
+        }
+        return id;
+    }
+
     private static final Map<String, User> USERS = new HashMap<>();
 
     public static User getUser(String key) {
@@ -29,18 +44,14 @@ public final class Util {
     }
 
     public String setUser(User user) {
-        String tag = user.getAsTag();
-        if (!USERS.containsKey(tag)) {
-            USERS.put(tag, user);
+        String id = user.getId();
+        if (!USERS.containsKey(id)) {
+            USERS.put(id, user);
         }
-        return tag;
+        return id;
     }
 
     public static void sendPrivateMessage(String user, String response) {
         USERS.get(user).openPrivateChannel().queue(c -> c.sendMessage("" + response).queue());
-    }
-
-    public static Set<String> getUserTags() {
-        return USERS.keySet();
     }
 }
