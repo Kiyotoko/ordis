@@ -3,16 +3,14 @@
 	<groupId>net.jda</groupId>
 	<artifactId>cephalon</artifactId>
 	<version>0.0.1-alpha-1</version>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.mainClass>net.jda.Launcher</project.mainClass>
-		<project.javaVersion>17</project.javaVersion>
+		<project.javaVersion>11</project.javaVersion>
 		<maven.compiler.source>${project.javaVersion}</maven.compiler.source>
 		<maven.compiler.target>${project.javaVersion}</maven.compiler.target>
 		<maven.compiler.release>${project.javaVersion}</maven.compiler.release>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>net.dv8tion</groupId>
@@ -41,8 +39,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-
 	<build>
 		<plugins>
 			<plugin>
