@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 
 public class Phase implements Recurring {
     @Nonnull
-    private final LinkedList<@Nonnull Recurring> recurring = new LinkedList<>();
+    private final LinkedList<Recurring> recurring = new LinkedList<>();
 
     @Nullable
     private MessageBuilder prolog;
@@ -49,7 +49,7 @@ public class Phase implements Recurring {
     }
 
     @Nonnull
-    public LinkedList<@Nonnull Recurring> getRecurring() {
+    public LinkedList<Recurring> getRecurring() {
         return recurring;
     }
 
