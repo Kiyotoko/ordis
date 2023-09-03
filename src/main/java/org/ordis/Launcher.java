@@ -1,4 +1,4 @@
-package com.ordis;
+package org.ordis;
 
 import java.io.FileInputStream;
 
