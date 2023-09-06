@@ -1,12 +1,15 @@
 package org.ordis.base;
 
+import javax.annotation.Nonnull;
 import java.lang.annotation.*;
 
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
-    String name();
+    @Nonnull String name();
 
-    String description();
+    @Nonnull String description();
+
+    @Nonnull Option[] options() default {};
 }

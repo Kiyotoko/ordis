@@ -2,6 +2,7 @@ package org.ordis.base;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,30 @@ public abstract class CommandAdapter {
             if (method.isAnnotationPresent(Command.class) ) {
                 Command command = method.getAnnotation(Command.class);
                 actions.put(command.name(), method);
-                data.add(new CommandDataImpl(command.name(), command.description()));
+                CommandDataImpl impl = new CommandDataImpl(command.name(), command.description());
+                for (Option option : command.options()) {
+                    OptionData opt = getOptionData(option);
+                    impl.addOptions(opt);
+                }
+                data.add(impl);
             }
         }
-        logger.info("Loaded {} commands.", actions.size());
+        logger.info("Loaded {} command(s).", actions.size());
+    }
+
+    @Nonnull
+    private static OptionData getOptionData(Option option) {
+        OptionData opt = new OptionData(option.type(), option.name(), option.description());
+        if (option.isAutoComplete())
+            opt.setAutoComplete(true);
+        if (option.isRequired())
+            opt.setRequired(true);
+        for (Choice choice : option.choices()) {
+            opt.addChoice(choice.name(), choice.value());
+        }
+        if (option.channelTypes().length > 0)
+            opt.setChannelTypes(option.channelTypes());
+        return opt;
     }
 
     public void call(@Nonnull SlashCommandInteractionEvent event) {
