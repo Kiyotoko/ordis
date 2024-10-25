@@ -5,11 +5,8 @@ FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
 COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:resolve
-
 COPY src ./src
-COPY token.txt ./
-RUN ./mvnw compile
+COPY LICENSE mvnw pom.xml token.txt* ./
+RUN ./mvnw install
 
-CMD ["./mvnw", "exec:java"]
+ENTRYPOINT ["java", "-jar", "target/ordis-*.*.*.jar"]
