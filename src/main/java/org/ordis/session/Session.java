@@ -7,9 +7,7 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.ordis.game.Game;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Session {
     private final Set<User> users = new HashSet<>();
@@ -21,7 +19,6 @@ public class Session {
     public Session(Registry registry, SlashCommandInteractionEvent event) {
         this.host = event.getUser();
         users.add(event.getUser());
-
 
         int hash = event.hashCode();
         event.replyEmbeds(new EmbedBuilder().setTitle("Session hosted!").setAuthor(host.getName(), null, host.getAvatarUrl()).setDescription("You can now join and leave the session. When the host presses start, the game will start and this field will be closed.").build())

@@ -22,11 +22,11 @@ public class Application {
 
     public void setup() {
         registry.getCommandData().addAll(List.of(new CommandDataImpl("help", "Get help."),
-                new CommandDataImpl("host", "Host a game.")));
+                new CommandDataImpl("play", "Play a game.")));
         registry.getSlashInteractions().putAll(Map.of(
                 "/help", event -> event.replyEmbeds(new EmbedBuilder().setDescription("Check out the wiki for help!").setUrl("https://github.com/Kiyotoko/ordis").setColor(
                 Color.GREEN).build()).queue(),
-                "/host", event1 -> new Session(registry, event1)));
+                "/play", event1 -> new Session(registry, event1)));
     }
 
     public void start(String token) throws InterruptedException {

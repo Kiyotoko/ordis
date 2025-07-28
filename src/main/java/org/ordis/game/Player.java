@@ -20,7 +20,6 @@ public class Player {
         this.user = user;
     }
 
-
     @Nonnull
     public User getUser() {
         return user;
